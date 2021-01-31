@@ -1,3 +1,4 @@
+
 /* eslint-disable */
 var simpleLevelPlan = [
   "                      ",
@@ -10,6 +11,10 @@ var simpleLevelPlan = [
   "      xxxxxxxxxxxxxx  ",
   "                      "
 ];
+
+var gateInfo = [];
+var gates = [];
+
 
 function Level(plan) {
   this.width = plan[0].length;
@@ -93,6 +98,7 @@ function Player(pos) {
   this.pos = pos.plus(new Vector(0, -0.5));
   this.size = new Vector(0.8, 1.5);
   this.speed = new Vector(0, 0);
+  this.state = 0;
 }
 Player.prototype.type = "player";
 
@@ -233,6 +239,15 @@ Level.prototype.obstacleAt = function(pos, size) {
             this.grid[y][i] = "inactiveGate"
             i--;
           }
+          if (!gate_info.includes((i, (actor.ch, _)))) {
+            gate_info.append((i, (actor.ch, actor.state)));
+          }
+        }
+        else if (actor.ch == "S") {
+          this.player.state = 1
+        }
+        else if (actor.ch == "s") {
+          this.player.state = 0
         }
     
         return fieldType;
@@ -422,3 +437,9 @@ function runGame(plans, Display) {
   }
   startLevel(0);
 }
+
+for (var i = 0; i < gateInfo.length; i++) {
+  gates.append(gateInfo[i][1])
+}
+
+localStorage["gates"] = gates
