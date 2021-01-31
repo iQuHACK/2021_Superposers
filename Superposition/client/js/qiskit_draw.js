@@ -12,6 +12,7 @@ function draw(gateitems){
     var i = 0;
 
     for (var gateitem in gateitems){
+        gateitem = gateitem[0], qp = gateitem[1];
         if (gateitem == "H"){
             qc.add(Gate.h, i, qp)
         }
@@ -63,7 +64,7 @@ function draw(gateitems){
         }
     }
 
-    qc.draw()
+    qc.print()
 }
 
 

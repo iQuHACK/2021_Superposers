@@ -36,33 +36,38 @@ function Level(plan) {
         fieldType = "lava";
       }
       else if (ch == "H"){
-        fieldType = "gate";
+        fieldType = "gateitem";
       }
       else if (ch == "1"){
-        fieldType = "gate";
+        fieldType = "gateitem";
       }
       else if (ch == "0"){
-        fieldType = "gate";
+        fieldType = "gateitem";
       }
       else if (ch == "2"){
-        fieldType = "gate";
+        fieldType = "gateitem";
       }
       else if (ch == "P"){
-        fieldType = "gate";
+        fieldType = "gateitem";
       }
       else if (ch == "Y"){
-        fieldType = "gate";
+        fieldType = "gateitem";
       }
       else if (ch == "U"){
-        fieldType = "gate";
+        fieldType = "gateitem";
       }
       else if (ch == "N"){
-        fieldType = "gate";
+        fieldType = "gateitem";
+      }
+      else if (ch == "S"){
+        fieldType = "buttons";
+      }
+      else if (ch == "s"){
+        fieldType = "buttons";
       }
       else if (ch == "inactiveGate"){
         fieldType = "inactiveGate"
       }
-
       gridLine.push(fieldType);
     }
     this.grid.push(gridLine);
@@ -92,9 +97,11 @@ var actorChars = {
   "@": Player,
   "o": Coin,
   "=": Lava, "|": Lava, "v": Lava,
+  "O": Buttons, "Z": Buttons
 };
 
 function Player(pos) {
+  this.qubit = 0;
   this.pos = pos.plus(new Vector(0, -0.5));
   this.size = new Vector(0.8, 1.5);
   this.speed = new Vector(0, 0);
@@ -102,12 +109,18 @@ function Player(pos) {
 }
 Player.prototype.type = "player";
 
-function Gate(pos, char) {
-  this.basePos = this.pos = pos.plus(new Vector(0.2, 0.1));
+function Gateitem(pos) {
+  this.basePos = this.pos = pos;
   this.size = new Vector(1, 1);
 
 }
-Gate.prototype.type = "gate";
+Gateitem.prototype.type = "gateitem";
+
+function Buttons(pos) {
+  this.basePos = this.pos = pos;
+  this.size = new Vector(0.6, 0.6);
+}
+Buttons.prototype.type = "buttons";
 
 function Lava(pos, ch) {
   this.pos = pos;
@@ -147,7 +160,7 @@ function DOMDisplay(parent, level) {
   this.drawFrame();
 }
 
-var scale = 20;
+var scale = 20; //originally 20 <-- this is zoom factor
 
 DOMDisplay.prototype.drawBackground = function() {
   var table = elt("table", "background");
@@ -226,27 +239,32 @@ Level.prototype.obstacleAt = function(pos, size) {
     for (var x = xStart; x < xEnd; x++) {
       var fieldType = this.grid[y][x];
       if (fieldType) {
-        if (fieldType == "gate") {
+        if (fieldType == "gateitem") {
+          console.log("checking for gate", this.grid)
           var i = x;
-          while (i < (this.grid[y].length) && this.grid[y][i] == "gate") {
+          while (i < (this.grid[y].length) && this.grid[y][i] == "gateitem") {
             console.log(i)
             this.grid[y][i] = "inactiveGate"
             i++;
           }
           i = x-1;
-          while (i >= 0 && this.grid[y][i] == "gate") {
+          while (i >= 0 && this.grid[y][i] == "gateitem") {
             console.log("decreasing", i)
             this.grid[y][i] = "inactiveGate"
             i--;
           }
-          if (!gate_info.includes((i, (actor.ch, _)))) {
-            gate_info.append((i, (actor.ch, actor.state)));
+          console.log("checking", gateInfo);
+          var actor_ch = this.grid[y][x]
+          if (!(gateInfo.includes((i, (actor_ch, 0))) || gateInfo.includes((i, (actor_ch, 1))))) {
+            console.log([i, (actor_ch, this.player.state)]);
+            gateInfo.push([i, (actor_ch, this.player.state)]);
+            console.log(gateInfo);
           }
         }
-        else if (actor.ch == "S") {
+        else if (this.grid[y][x] == "S") {
           this.player.state = 1
         }
-        else if (actor.ch == "s") {
+        else if (this.grid[y][x] == "s") {
           this.player.state = 0
         }
     
@@ -283,7 +301,11 @@ Level.prototype.animate = function(step, keys) {
   }
 };
 
-Gate.prototype.act = function(step) {
+Gateitem.prototype.act = function(step) {
+  this.pos = this.basePos;
+}
+
+Buttons.prototype.act = function(step) {
   this.pos = this.basePos;
 }
 
@@ -322,7 +344,7 @@ Player.prototype.moveX = function(step, level, keys) {
 };
 
 var gravity = 20;   // original is 30
-var jumpSpeed = 22; // original is 17
+var jumpSpeed = 19; // original is 17
 
 Player.prototype.moveY = function(step, level, keys) {
   this.speed.y += step * gravity;
@@ -432,6 +454,7 @@ function runGame(plans, Display) {
       else if (n < plans.length - 1)
         startLevel(n + 1);
       else
+        console.log("gateinfo", gateInfo);
         console.log("You win!");
     });
   }
@@ -439,7 +462,8 @@ function runGame(plans, Display) {
 }
 
 for (var i = 0; i < gateInfo.length; i++) {
-  gates.append(gateInfo[i][1])
+  gates.push(gateInfo[i][1])
 }
 
-localStorage["gates"] = gates
+localStorage["gates"] = gates;
+

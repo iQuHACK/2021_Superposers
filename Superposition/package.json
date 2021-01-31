@@ -28,9 +28,11 @@
     "bootstrap": "^4.0.0-alpha.4",
     "express": "^4.17.1",
     "font-awesome": "^4.6.3",
+    "jQuery": "^1.7.4",
     "mysql": "^2.11.1",
     "package-lock.json": "^1.0.0",
     "package.json": "^2.0.1",
+    "qiskit": "^0.9.0",
     "sequelize": "^3.24.4"
   }
 }

@@ -3,32 +3,39 @@
   <head>
     <meta charset="utf-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Dark Blue Redux</title>
+    <title>Superposition</title>
 
     <!-- Scripts -->
-    <script src="js/bootstrap.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="js/game.js"></script>
-    <script src="js/game_levels.js"></script>
+    <script src="js/game_levels_edited.js"></script>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/game.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
   </head>
-  <body style="background-color: #999">
+  <body>
+  <img class="pull-xs-left" width="400" height="224" src="https://www.ocf.berkeley.edu/~vio/qubit.gif">
+  <img class="m-x-auto d-block" src="img/superposition.png">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-2"></div>
-        <div class="viewport col-md-8 col-md-offset-2">
-          yo hey
-            <script>
-              runGame(GAME_LEVELS, DOMDisplay);
-            </script>
+        <div class="col-md-4">
+            <span id="gameDisplay">
+              <script>
+                runGame(GAME_LEVELS, DOMDisplay);
+              </script>
+            </span>
+        </div>
+        <div>
+        <!-- instructions -->
+        <img class="pull-xs-right" width="210" height="" src="img/dark-blue-redux-instructions.png">
         </div>
       </div>
     </div>
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
   </body>
 </html>
