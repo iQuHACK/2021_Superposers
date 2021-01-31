@@ -30,22 +30,33 @@ function Level(plan) {
       else if (ch == "!"){
         fieldType = "lava";
       }
-
-      
-      // GATES
       else if (ch == "H"){
         fieldType = "gate";
-        //gateType = "H";
-      }/*
+      }
       else if (ch == "1"){
-        fieldType = "wall";
-        //gateType = "CNOT_P1";
+        fieldType = "gate";
+      }
+      else if (ch == "0"){
+        fieldType = "gate";
+      }
+      else if (ch == "2"){
+        fieldType = "gate";
+      }
+      else if (ch == "P"){
+        fieldType = "gate";
+      }
+      else if (ch == "Y"){
+        fieldType = "gate";
+      }
+      else if (ch == "U"){
+        fieldType = "gate";
       }
       else if (ch == "N"){
-        fieldType = "wall";
-        //gateType = "NOT";
-      }*/
-
+        fieldType = "gate";
+      }
+      else if (ch == "inactiveGate"){
+        fieldType = "inactiveGate"
+      }
 
       gridLine.push(fieldType);
     }
@@ -76,7 +87,6 @@ var actorChars = {
   "@": Player,
   "o": Coin,
   "=": Lava, "|": Lava, "v": Lava,
-  //"H": Gate, //"N": NOTGate,
 };
 
 function Player(pos) {
@@ -86,9 +96,10 @@ function Player(pos) {
 }
 Player.prototype.type = "player";
 
-function Gate(pos) {
+function Gate(pos, char) {
   this.basePos = this.pos = pos.plus(new Vector(0.2, 0.1));
   this.size = new Vector(1, 1);
+
 }
 Gate.prototype.type = "gate";
 
@@ -199,14 +210,33 @@ Level.prototype.obstacleAt = function(pos, size) {
   var yStart = Math.floor(pos.y);
   var yEnd = Math.ceil(pos.y + size.y);
 
-  if (xStart < 0 || xEnd > this.width || yStart < 0)
+  if (xStart < 0 || xEnd > this.width || yStart < 0) {
+    console.log('wall')
     return "wall";
+  }
   if (yEnd > this.height)
     return "lava";
   for (var y = yStart; y < yEnd; y++) {
     for (var x = xStart; x < xEnd; x++) {
       var fieldType = this.grid[y][x];
-      if (fieldType) return fieldType;
+      if (fieldType) {
+        if (fieldType == "gate") {
+          var i = x;
+          while (i < (this.grid[y].length) && this.grid[y][i] == "gate") {
+            console.log(i)
+            this.grid[y][i] = "inactiveGate"
+            i++;
+          }
+          i = x-1;
+          while (i >= 0 && this.grid[y][i] == "gate") {
+            console.log("decreasing", i)
+            this.grid[y][i] = "inactiveGate"
+            i--;
+          }
+        }
+    
+        return fieldType;
+      }
     }
   }
 };
@@ -382,7 +412,8 @@ function runGame(plans, Display) {
   function startLevel(n) {
     runLevel(new Level(plans[n]), Display, function(status) {
       if (status == "lost")
-        startLevel(n);
+        //startLevel(n);
+        draw([]);
       else if (n < plans.length - 1)
         startLevel(n + 1);
       else

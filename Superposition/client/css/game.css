@@ -28,6 +28,11 @@
     background: green;
 }
 
+.inactiveGate {
+    background: black;
+}
+
+
 .player {
     background: rgb(64, 64, 64);
 }

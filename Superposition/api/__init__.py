@@ -26,7 +26,12 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    
+    @app.route('/trial', methods=['GET'])
+    def trial():
+        console.log("api worked!")
+
+        return "hello"
+
     @app.route('/gate', methods=['POST'])
     def log_gate_collision():
         print(request.json)

@@ -63,3 +63,4 @@ Map.sync().then(function() {
     console.error('🍊 error in initializing data', err);
   });
 });
+
