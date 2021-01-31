@@ -1,13 +1,12 @@
 const qiskit = require('qiskit');
 const qutil = require('util');
 const { Circuit, Gate } = require('@qiskit/sim');
+var QuantumCircuit = require("quantum-circuit");
 
 // gateitems = [gateitem, qp]
 function draw(gateitems){
 
-    console.log("in qiskit function!")
-
-    const qc = Circuit.createCircuit(3, 3);
+    const qc = new QuantumCircuit(3);
 
     var i = 0;
 
