@@ -125,18 +125,17 @@ function GameCanvas(props) {
             player.y += player.y_v;
             player.x += player.x_v;
             // A simple code that checks for collions with the platform
-            let i = -1;
-            if(platforms[0].x < player.x && player.x < platforms[0].x + platforms[0].width &&
-            platforms[0].y < player.y && player.y < platforms[0].y + platforms[0].height){
-                i = 0;
+            let platform_y = -1;
+            for (let i=0; i < 3; i++) {
+                if(platforms[i].x < player.x && player.x < platforms[i].x + platforms[i].width &&
+                    platforms[i].y < player.y && player.y < platforms[i].y + platforms[i].height){
+                        platform_y = i;
+                    }
             }
-            if(platforms[1].x < player.x && player.x < platforms[1].x + platforms[1].width &&
-            platforms[1].y < player.y && player.y < platforms[1].y + platforms[1].height){
-                i = 1;
-            }
-            if (i > -1){
+            
+            if (platform_y > -1){
                 player.jump = false;
-                player.y = platforms[i].y;    
+                player.y = platforms[platform_y].y;    
             }
             // Rendering the canvas, the player and the platforms
             rendercanvas(ctx);
