@@ -51,7 +51,8 @@ function renderplat(ctx){
     for (var i=0; i<num; i++){
         ctx.fillRect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
     }
-    
+
+
 
 
 }
@@ -90,16 +91,15 @@ function keyup(e) {
 
 function GameCanvas(props) {
     const canvasRef = useRef(null);
-    const [loc, setLoc] = useState([0, 0]);
-    const [v, setV] = useState([0, 0]);
-    const [jumping, setJumping] = useState(true);
+    const [deactivated, setDeactivated] = useState([]);
 
     createplat();
     window.addEventListener("keydown",keydown);
     window.addEventListener("keyup",keyup);
 
+    
+
     useEffect(() => {
-        console.log("keys", keys.left, keys.right);
         const canvasObj = canvasRef.current
         const ctx = canvasObj.getContext('2d');
         ctx.canvas.height = 270;
@@ -125,19 +125,27 @@ function GameCanvas(props) {
             player.y += player.y_v;
             player.x += player.x_v;
             // A simple code that checks for collions with the platform
-            let platform_y = -1;
+            var platform_y = -1
             for (let i=0; i < 3; i++) {
                 if(platforms[i].x < player.x && player.x < platforms[i].x + platforms[i].width &&
                     platforms[i].y < player.y && player.y < platforms[i].y + platforms[i].height){
                         platform_y = i;
+                        console.log("platform collision", i)
+                        }
+                        setDeactivated(deactivated.concat(i)); 
                     }
             }
             
             if (platform_y > -1){
                 player.jump = false;
-                player.y = platforms[platform_y].y;    
+                player.y = platforms[platform_y].y;  
+                
+                if (!(deactivated.includes(platform_y))){
+                    ctx.fillStyle = "#D1D1D1";
+                    ctx.fillRect(platforms[platform_y].x, platforms[platform_y].y, platforms[platform_y].width, platforms[platform_y].height);
             }
             // Rendering the canvas, the player and the platforms
+            
             rendercanvas(ctx);
             renderplayer(ctx);
             renderplat(ctx);
