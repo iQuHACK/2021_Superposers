@@ -5,6 +5,8 @@ const { Circuit, Gate } = require('@qiskit/sim');
 // gateitems = [gateitem, qp]
 function draw(gateitems){
 
+    console.log("in qiskit function!")
+
     const qc = Circuit.createCircuit(3, 3);
 
     var i = 0;

@@ -1,3 +1,4 @@
+
 /* eslint-disable */
 var simpleLevelPlan = [
   "                      ",
@@ -10,6 +11,10 @@ var simpleLevelPlan = [
   "      xxxxxxxxxxxxxx  ",
   "                      "
 ];
+
+var gateInfo = [];
+var gates = [];
+
 
 function Level(plan) {
   this.width = plan[0].length;
@@ -30,9 +35,6 @@ function Level(plan) {
       else if (ch == "!"){
         fieldType = "lava";
       }
-
-      
-      // GATES
       else if (ch == "H"){
         fieldType = "gateitem";
       }
@@ -63,8 +65,9 @@ function Level(plan) {
       else if (ch == "s"){
         fieldType = "buttons";
       }
-
-
+      else if (ch == "inactiveGate"){
+        fieldType = "inactiveGate"
+      }
       gridLine.push(fieldType);
     }
     this.grid.push(gridLine);
@@ -102,12 +105,14 @@ function Player(pos) {
   this.pos = pos.plus(new Vector(0, -0.5));
   this.size = new Vector(0.8, 1.5);
   this.speed = new Vector(0, 0);
+  this.state = 0;
 }
 Player.prototype.type = "player";
 
 function Gateitem(pos) {
   this.basePos = this.pos = pos;
   this.size = new Vector(1, 1);
+
 }
 Gateitem.prototype.type = "gateitem";
 
@@ -224,14 +229,47 @@ Level.prototype.obstacleAt = function(pos, size) {
   var yStart = Math.floor(pos.y);
   var yEnd = Math.ceil(pos.y + size.y);
 
-  if (xStart < 0 || xEnd > this.width || yStart < 0)
+  if (xStart < 0 || xEnd > this.width || yStart < 0) {
+    console.log('wall')
     return "wall";
+  }
   if (yEnd > this.height)
     return "lava";
   for (var y = yStart; y < yEnd; y++) {
     for (var x = xStart; x < xEnd; x++) {
       var fieldType = this.grid[y][x];
-      if (fieldType) return fieldType;
+      if (fieldType) {
+        if (fieldType == "gateitem") {
+          console.log("checking for gate", this.grid)
+          var i = x;
+          while (i < (this.grid[y].length) && this.grid[y][i] == "gateitem") {
+            console.log(i)
+            this.grid[y][i] = "inactiveGate"
+            i++;
+          }
+          i = x-1;
+          while (i >= 0 && this.grid[y][i] == "gateitem") {
+            console.log("decreasing", i)
+            this.grid[y][i] = "inactiveGate"
+            i--;
+          }
+          console.log("checking", gateInfo);
+          var actor_ch = this.grid[y][x]
+          if (!(gateInfo.includes((i, (actor_ch, 0))) || gateInfo.includes((i, (actor_ch, 1))))) {
+            console.log([i, (actor_ch, this.player.state)]);
+            gateInfo.push([i, (actor_ch, this.player.state)]);
+            console.log(gateInfo);
+          }
+        }
+        else if (this.grid[y][x] == "S") {
+          this.player.state = 1
+        }
+        else if (this.grid[y][x] == "s") {
+          this.player.state = 0
+        }
+    
+        return fieldType;
+      }
     }
   }
 };
@@ -411,14 +449,21 @@ function runGame(plans, Display) {
   function startLevel(n) {
     runLevel(new Level(plans[n]), Display, function(status) {
       if (status == "lost")
-        startLevel(n);
+        //startLevel(n);
+        draw([]);
       else if (n < plans.length - 1)
         startLevel(n + 1);
       else
+        console.log("gateinfo", gateInfo);
         console.log("You win!");
     });
   }
   startLevel(0);
 }
 
-localStorage["gates"] = [("H", 0)]
+for (var i = 0; i < gateInfo.length; i++) {
+  gates.push(gateInfo[i][1])
+}
+
+localStorage["gates"] = gates;
+

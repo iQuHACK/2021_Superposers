@@ -28,6 +28,11 @@
     background: green;
 }
 
+.inactiveGate {
+    background: black;
+}
+
+
 .buttons {
     background: red;
 }
@@ -38,8 +43,8 @@
 
 .game {
     overflow: hidden;
-    max-width: 2010px;
-    max-height: 1350px;
+    max-width: 635px;
+    max-height: 450px;
     position: relative;
 }
 
