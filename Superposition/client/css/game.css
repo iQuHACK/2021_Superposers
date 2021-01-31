@@ -24,8 +24,12 @@
     background: rgb(241, 229, 89);
 }
 
-.gate {
+.gateitem {
     background: green;
+}
+
+.buttons {
+    background: red;
 }
 
 .player {
@@ -34,8 +38,8 @@
 
 .game {
     overflow: hidden;
-    max-width: 670px;
-    max-height: 450px;
+    max-width: 2010px;
+    max-height: 1350px;
     position: relative;
 }
 
